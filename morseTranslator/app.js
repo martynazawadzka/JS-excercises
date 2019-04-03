@@ -1,19 +1,19 @@
 const alphabet = require('./alphabet');
 
 class Translator {
-  constructor(text) {
-    this.text = text.toUpperCase().trim();
-    this.findLanguage();
+  static prepareText(text) {
+    return text.toUpperCase().trim();
   }
-  findLanguage() {
+
+  static findLanguage(text) {
     const latinRegex = /^[a-zA-Z\d\s]+$/gi;
     const nonLatinRegex = /^[-._ ][^a-zA-Z]+$/g;
 
-    this.isLatin = this.text.match(latinRegex);
-    this.isMorse = this.text.match(nonLatinRegex);
+    this.isLatin = text.match(latinRegex);
+    this.isMorse = text.match(nonLatinRegex);
   }
 
-  getLatinLetter(morseLetter) {
+  static getLatinLetter(morseLetter) {
     for (let key in alphabet) {
       if (key === morseLetter) {
         return alphabet[key];
@@ -21,7 +21,7 @@ class Translator {
     }
   }
 
-  getMorseLetter(latinLetter) {
+  static getMorseLetter(latinLetter) {
     for (let key in alphabet) {
       if (alphabet[key] === latinLetter) {
         return `${key} `;
@@ -29,10 +29,10 @@ class Translator {
     }
   }
 
-  translateToMorse() {
+  static translateToMorse(text) {
     let translatedText = '';
 
-    for (let letter of this.text) {
+    for (let letter of text) {
       if (letter === ' ') {
         translatedText += '// ';
         continue;
@@ -43,8 +43,8 @@ class Translator {
     return translatedText;
   }
 
-  translateToLatin() {
-    const splittedText = this.text.split(' ');
+  static translateToLatin(text) {
+    const splittedText = text.split(' ');
     let translatedText = '';
 
     for (let letter of splittedText) {
@@ -58,16 +58,20 @@ class Translator {
     return translatedText;
   }
 
-  translate() {
+  static translate(text) {
+    const preparedText = this.prepareText(text);
+    this.findLanguage(preparedText);
     if (this.isLatin) {
-      return this.translateToMorse();
+      return this.translateToMorse(preparedText);
     } else if (this.isMorse) {
-      return this.translateToLatin();
+      return this.translateToLatin(preparedText);
     }
     return 'Give proper text';
   }
 }
 
-const myT = new Translator('.... .. // -- -.-- // -. .- -- . // .. ...');
-
-console.log(myT.translate());
+console.log(
+  Translator.translate(
+    '.... .. // -- -.-- // -. .- -- . // .. ... // -- .- .-. - -.-- -. .- '
+  )
+);
