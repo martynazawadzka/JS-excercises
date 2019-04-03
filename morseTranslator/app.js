@@ -7,12 +7,25 @@ class Translator {
   }
   findLanguage() {
     const latinRegex = /^[a-zA-Z\d\s]+$/gi;
-    const nonLatinRegex = /[-._ ][^a-zA-Z]+$/g;
+    const nonLatinRegex = /^[-._ ][^a-zA-Z]+$/g;
 
-    if (this.text.match(latinRegex)) {
-      this.isLatin = true;
-    } else if (this.text.match(nonLatinRegex)) {
-      this.isMorse = true;
+    this.isLatin = this.text.match(latinRegex);
+    this.isMorse = this.text.match(nonLatinRegex);
+  }
+
+  getLatinLetter(morseLetter) {
+    for (let key in alphabet) {
+      if (key === morseLetter) {
+        return alphabet[key];
+      }
+    }
+  }
+
+  getMorseLetter(latinLetter) {
+    for (let key in alphabet) {
+      if (alphabet[key] === latinLetter) {
+        return `${key} `;
+      }
     }
   }
 
@@ -24,12 +37,8 @@ class Translator {
         translatedText += '// ';
         continue;
       }
-      for (let key in alphabet) {
-        if (alphabet[key] === letter) {
-          translatedText += `${key} `;
-          break;
-        }
-      }
+
+      translatedText += this.getMorseLetter(letter);
     }
     return translatedText;
   }
@@ -43,12 +52,8 @@ class Translator {
         translatedText += ' ';
         continue;
       }
-      for (let key in alphabet) {
-        if (key === letter) {
-          translatedText += `${alphabet[key]}`;
-          break;
-        }
-      }
+
+      translatedText += this.getLatinLetter(letter);
     }
     return translatedText;
   }
