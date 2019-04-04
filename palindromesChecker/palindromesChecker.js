@@ -1,13 +1,12 @@
 class PalindromesChecker {
-  static setPalindromeFragment(newFragment) {
-    if (!this.palindromeFragment) {
-      this.palindromeFragment = newFragment;
-      return;
+  static findPalindromeFragment(rawWord) {
+    const word = rawWord.toLowerCase();
+    for (let i = 0; i < word.length - 2; i++) {
+      for (let j = word.length - 1; j - 1 > i; j--) {
+        this.checkFragment(word, i, j);
+      }
     }
-
-    if (this.palindromeFragment.length < newFragment.length) {
-      this.palindromeFragment = newFragment;
-    }
+    return this.returnResult();
   }
 
   static checkFragment(word, firstLetterIndex, lastLetterIndex) {
@@ -27,22 +26,21 @@ class PalindromesChecker {
     for (let i = 1; i < middleLetterIndex; i++) {
       if (substring[i] !== substring[length - i - 1]) {
         isPalindrome = false;
-        break;
+        return;
       }
     }
-    if (isPalindrome) {
-      return substring;
-    }
+    return substring;
   }
 
-  static findPalindromeFragment(rawWord) {
-    const word = rawWord.toLowerCase();
-    for (let i = 0; i < word.length - 2; i++) {
-      for (let j = word.length - 1; j - 1 > i; j--) {
-        this.checkFragment(word, i, j);
-      }
+  static setPalindromeFragment(newFragment) {
+    if (!this.palindromeFragment) {
+      this.palindromeFragment = newFragment;
+      return;
     }
-    return this.returnResult();
+
+    if (this.palindromeFragment.length < newFragment.length) {
+      this.palindromeFragment = newFragment;
+    }
   }
 
   static returnResult() {
@@ -53,4 +51,4 @@ class PalindromesChecker {
   }
 }
 
-console.log(PalindromesChecker.findPalindromeFragment('baeRren'));
+console.log(PalindromesChecker.findPalindromeFragment('baetRren'));
